@@ -19,7 +19,7 @@ public class UserCommand {
 
     public static Boolean doUserCommand(String command, String jid, String admin) throws XMPPException, IOException, NumberFormatException, ClassNotFoundException, SQLException, ParseException {
         Boolean ans = false;
-        String msg;
+        String msg = null;
 
 
         if (command.startsWith("!report") && !ans) {
@@ -75,6 +75,40 @@ public class UserCommand {
             Main.id++;
 
         }
+
+        if (command.startsWith("!note") && !ans) {
+            command = command.replaceAll("!note ", "");
+            if (!ans) {
+                Sql.nodataFromBase("insert into 'TABLE1' ('time', 'jid', 'id','note') values ('" + "0" + "', '" + jid + "' , '" + Main.id + "','" + command + "'); ");
+            }
+            ans = true;
+            msg = "Writed!";
+            XmppNet.sendMessage(jid, msg);
+            Main.id++;
+
+        }
+        if (command.startsWith("!my") && !ans) {
+
+            if (!ans) {
+                msg = Sql.listOfNote(jid);
+            }
+            ans = true;
+            XmppNet.sendMessage(jid, msg);
+            Main.id++;
+
+        }
+
+        if (command.startsWith("!del") && !ans) {
+            command = command.replaceAll("!del #", "");
+            if (!ans) {
+                Sql.deleteNote(jid, command);
+            }
+            ans = true;
+            XmppNet.sendMessage(jid, msg);
+            Main.id++;
+
+        }
+
 
         try {
             if (command.startsWith("!timer") && !ans) {
@@ -136,7 +170,7 @@ public class UserCommand {
 
         if (command.equals("!help")) {
             msg = "Commands: \n"
-                    +"!report <message> - send <message> to admin, \n"
+                    + "!report <message> - send <message> to admin, \n"
                     + "\n"
                     + "!remind <dd.mm.yyy HH:mm>@<remind> - set a reminder on this date \n"
                     + " For example  !remind 03.10.2012 18:51@Hello \n"
@@ -144,7 +178,13 @@ public class UserCommand {
                     + "!timer <minutes>@<remind> - set timer. \n"
                     + "  For example '!timer 2@Hello' send after 2 minutes 'Hello' \n"
                     + "\n"
-                    + "!list - list of installed timers";
+                    + "!list - list of installed timers"
+                    + "\n"
+                    + "\n"
+                    + "Notes: \n"
+                    + "!my - list of notes \n"
+                    + "!note 'text' - write note \n"
+                    + "!del #1234567890 - delete note with number #1234567890 \n";
             XmppNet.sendMessage(jid, msg);
             ans = true;
         }

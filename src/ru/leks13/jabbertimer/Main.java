@@ -25,12 +25,12 @@ public class Main implements Runnable {
                 try {
                     Timer.start();
                 } catch (SQLException ex) {
-                    System.out.println("SQL error +\n"+ ex);
+                    System.out.println("SQL error \n"+ ex);
                 } catch (Exception ex) {
-                    System.out.println("Error+\n"+ ex);
+                    System.out.println("Error \n"+ ex);
                 }
             } catch (InterruptedException ex) {
-                System.out.println("Interrupted error +\n"+ ex);
+                System.out.println("Interrupted error \n"+ ex);
             }
         }
 

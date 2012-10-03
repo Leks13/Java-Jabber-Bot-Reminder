@@ -13,3 +13,9 @@ Commands:
   For example '!timer 2@Hello' send after 2 minutes 'Hello'   
      
 !list - list of installed timers   
+
+
+Notes:   
+!my - list of notes    
+!note 'text' - write note   
+!del #1234567890 - delete note with number #1234567890   
