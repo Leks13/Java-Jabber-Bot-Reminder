@@ -21,12 +21,10 @@ public class UserCommand {
         Boolean ans = false;
         String msg = null;
 
-
         if (command.startsWith("!report") && !ans) {
             command = new StringBuffer(command).delete(0, 7).toString();
             msg = command + " - " + jid;
             XmppNet.sendMessage(admin, msg);
-
             ans = true;
         }
         if (command.startsWith("!list") && !ans) {
@@ -35,7 +33,6 @@ public class UserCommand {
             msg = Sql.listOfTimer(jid);
             XmppNet.sendMessage(jid, msg);
             ans = true;
-
         }
 
         if (command.startsWith("!remind") && !ans) {
@@ -64,13 +61,14 @@ public class UserCommand {
 
             long dt1 = dt.getTime() / 1000;
             if (!ans) {
-                Sql.nodataFromBase("insert into 'TABLE1' ('time', 'jid', 'id','note') values ('" + dt1 + "', '" + jid + "' , '" + Main.id + "','" + noteU + "'); ");
+                if (dt1 > (time / 1000)) {
+                    Sql.nodataFromBase("insert into 'TABLE1' ('time', 'jid', 'id','note') values ('" + dt1 + "', '" + jid + "' , '" + Main.id + "','" + noteU + "'); ");
+                    msg = "Timer is set!";
+                } else {
+                    msg = "Wrong date";
+                }
             }
-
-            msg = "Timer is set!";
-            if (!ans) {
-                XmppNet.sendMessage(jid, msg);
-            }
+            XmppNet.sendMessage(jid, msg);
             ans = true;
             Main.id++;
 
@@ -95,20 +93,19 @@ public class UserCommand {
             ans = true;
             XmppNet.sendMessage(jid, msg);
             Main.id++;
-
         }
 
         if (command.startsWith("!del") && !ans) {
             command = command.replaceAll("!del #", "");
+            boolean res = true;
             if (!ans) {
                 Sql.deleteNote(jid, command);
             }
             ans = true;
+            msg = "Command complete";
             XmppNet.sendMessage(jid, msg);
             Main.id++;
-
         }
-
 
         try {
             if (command.startsWith("!timer") && !ans) {
@@ -117,7 +114,6 @@ public class UserCommand {
                 long time = (System.currentTimeMillis());
                 StringTokenizer st = new StringTokenizer(command, "@");
                 String noteU = "";
-
                 while (st.hasMoreTokens()) {
                     command = st.nextToken();
                     if (!st.hasMoreElements()) {
@@ -170,17 +166,12 @@ public class UserCommand {
 
         if (command.equals("!help")) {
             msg = "Commands: \n"
-                    + "!report <message> - send <message> to admin, \n"
-                    + "\n"
+                    + "!report <message> - send <message> to admin \n \n"
                     + "!remind <dd.mm.yyy HH:mm>@<remind> - set a reminder on this date \n"
-                    + " For example  !remind 03.10.2012 18:51@Hello \n"
-                    + "\n"
+                    + " For example  !remind 03.10.2012 18:51@Hello \n \n"
                     + "!timer <minutes>@<remind> - set timer. \n"
-                    + "  For example '!timer 2@Hello' send after 2 minutes 'Hello' \n"
-                    + "\n"
-                    + "!list - list of installed timers"
-                    + "\n"
-                    + "\n"
+                    + "  For example '!timer 2@Hello' send after 2 minutes 'Hello' \n \n"
+                    + "!list - list of installed timers \n \n"
                     + "Notes: \n"
                     + "!my - list of notes \n"
                     + "!note 'text' - write note \n"

@@ -32,7 +32,6 @@ public final class XmppNet {
         connection = new XMPPConnection(connConfig);
 
         try {
-
             int priority = 1;
             SASLAuthentication.supportSASLMechanism("PLAIN", 0);
             connection.connect();
@@ -46,7 +45,6 @@ public final class XmppNet {
             System.out.println("Unable to connect");
         }
         getResultConnection();
-
     }
 
     public void whoIsAdmin(String adminB) {
@@ -95,7 +93,7 @@ public final class XmppNet {
     }
 
     public static void sendMessage(String to_jid, String msg) throws XMPPException {
-        if (connection == null) {
+        if (connection.isConnected() == false) {
             throw new XMPPException("Not connected");
         }
 
@@ -127,34 +125,22 @@ public final class XmppNet {
         if (ans == false) {
             sendMessage(jid, "!help - list of commands");
         }
-
     }
 
     public void incomeChat() throws InterruptedException {
-
         PacketFilter filter = new AndFilter(new PacketTypeFilter(Message.class));
-        PacketCollector myCollector = connection.createPacketCollector(filter);
-
         PacketListener myListener = new PacketListener() {
             @Override
             public void processPacket(Packet packet) {
-
-                String ID = null;
                 Packet.nextID();
-                String message = packet.toXML();
-
                 try {
-                    pasrePacket(message);
+                    pasrePacket(packet.toXML());
                 } catch (XMPPException | IOException | ParseException | NumberFormatException | ClassNotFoundException | SQLException ex) {
                     Logger.getLogger(XmppNet.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
                 packet.removeExtension((PacketExtension) packet);
-
             }
         };
-
         connection.addPacketListener(myListener, filter);
-
     }
 }

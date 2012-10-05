@@ -31,6 +31,7 @@ public class Sql {
                 i++;
             }
             st.close();
+            bd.close();
         }
 
         return rs;
@@ -44,6 +45,7 @@ public class Sql {
             st.execute("create table if not exists 'TABLE1' ('time' long, 'jid' text, 'id' int, 'note' text);");
             f = st.execute(s);
             st.close();
+            bd.close();
         }
 
         return f;
@@ -65,8 +67,11 @@ public class Sql {
                 f += S + "\n";
             }
             st.close();
+            bd.close();
         }
-
+        if (f.length() == 0) {
+            f = "No timers";
+        }
         return f;
     }
 
@@ -83,25 +88,30 @@ public class Sql {
             while (rs.next()) {
                 String note = rs.getString("note");
                 String id = rs.getString("id");
-                f += "#" +id + "\n" + note + "\n \n";
+                f += "#" + id + "\n" + note + "\n \n";
             }
             st.close();
+            bd.close();
         }
-
+        if (f.length() == 0) {
+            f = "No notes";
+        }
         return f;
     }
 
     public static void deleteNote(String jid, String id) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         ResultSet rs;
-        Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db");
-        String f = "";
-        jid = "'" + jid + "'";
-        boolean res;
-        try (java.sql.Statement st = bd.createStatement()) {
-            st.execute("create table if not exists 'TABLE1' ('time' long, 'jid' text, 'id' int, 'note' text);");
-                res = st.execute("DELETE FROM TABLE1 WHERE id=" + id + " AND jid="+jid + ";");
-            st.close();
+        try (Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db")) {
+            jid = "'" + jid + "'";
+            try (java.sql.Statement st = bd.createStatement()) {
+                st.execute("create table if not exists 'TABLE1' ('time' long, 'jid' text, 'id' int, 'note' text);");
+                st.execute("DELETE FROM TABLE1 WHERE id=" + id + " AND jid=" + jid + ";");
+                st.close();
+            } catch (SQLException e) {
+               
+            }
+            bd.close();
         }
     }
 }
