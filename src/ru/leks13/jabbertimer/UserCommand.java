@@ -27,6 +27,7 @@ public class UserCommand {
             XmppNet.sendMessage(admin, msg);
             ans = true;
         }
+
         if (command.startsWith("!list") && !ans) {
             java.util.Date today = new java.util.Date();
             long time = (System.currentTimeMillis());
@@ -71,7 +72,6 @@ public class UserCommand {
             XmppNet.sendMessage(jid, msg);
             ans = true;
             Main.id++;
-
         }
 
         if (command.startsWith("!note") && !ans) {
@@ -85,11 +85,9 @@ public class UserCommand {
             Main.id++;
 
         }
-        if (command.startsWith("!my") && !ans) {
 
-            if (!ans) {
-                msg = Sql.listOfNote(jid);
-            }
+        if (command.startsWith("!my") && !ans) {
+            msg = Sql.listOfNote(jid);
             ans = true;
             XmppNet.sendMessage(jid, msg);
             Main.id++;
@@ -97,7 +95,6 @@ public class UserCommand {
 
         if (command.startsWith("!del") && !ans) {
             command = command.replaceAll("!del #", "");
-            boolean res = true;
             if (!ans) {
                 Sql.deleteNote(jid, command);
             }
@@ -143,7 +140,6 @@ public class UserCommand {
 
         if (command.startsWith("!off") && !ans && jid.contains(admin)) {
             XmppNet.disconnect();
-
             ans = true;
         }
 

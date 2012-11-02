@@ -26,7 +26,7 @@ public class Sql {
                 String jid = rs.getString("jid");
                 String msg = rs.getString("note");
                 XmppNet.sendMessage(jid, msg);
-                boolean f = st.execute("DELETE FROM TABLE1 WHERE id=" + j + ";");
+                st.execute("DELETE FROM TABLE1 WHERE id=" + j + ";");
                 st.close();
                 i++;
             }
@@ -40,15 +40,15 @@ public class Sql {
     public static boolean nodataFromBase(String s) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db");
-        boolean f;
+        boolean res;
         try (java.sql.Statement st = bd.createStatement()) {
             st.execute("create table if not exists 'TABLE1' ('time' long, 'jid' text, 'id' int, 'note' text);");
-            f = st.execute(s);
+            res = st.execute(s);
             st.close();
             bd.close();
         }
 
-        return f;
+        return res;
     }
 
     public static String listOfTimer(String jid) throws ClassNotFoundException, SQLException {
@@ -79,7 +79,7 @@ public class Sql {
         Class.forName("org.sqlite.JDBC");
         ResultSet rs;
         Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db");
-        String f = "";
+        String res = "";
         jid = "'" + jid + "'";
         java.util.Date time;
         try (java.sql.Statement st = bd.createStatement()) {
@@ -88,15 +88,15 @@ public class Sql {
             while (rs.next()) {
                 String note = rs.getString("note");
                 String id = rs.getString("id");
-                f += "#" + id + "\n" + note + "\n \n";
+                res = "#" + id + "\n" + note + "\n\n" + res;
             }
             st.close();
             bd.close();
         }
-        if (f.length() == 0) {
-            f = "No notes";
+        if (res.length() == 0) {
+            res = "No notes";
         }
-        return f;
+        return res;
     }
 
     public static void deleteNote(String jid, String id) throws ClassNotFoundException, SQLException {
@@ -109,7 +109,7 @@ public class Sql {
                 st.execute("DELETE FROM TABLE1 WHERE id=" + id + " AND jid=" + jid + ";");
                 st.close();
             } catch (SQLException e) {
-               
+                
             }
             bd.close();
         }

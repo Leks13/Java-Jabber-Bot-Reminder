@@ -76,7 +76,7 @@ public final class XmppNet {
         Roster roster = connection.getRoster();
         roster.reload();
         Collection<RosterEntry> entries = roster.getEntries();
-        Iterator it = entries.iterator(); 
+        Iterator it = entries.iterator();
         while (it.hasNext()) {
             msg = msg + "\n" + it.next().toString();
         }
@@ -107,40 +107,42 @@ public final class XmppNet {
 
     }
 
-    public static void pasrePacket(String message) throws XMPPException, IOException, ParseException, NumberFormatException, ClassNotFoundException, SQLException {
-        String jid, msg;
-        int start, finish;
-        start = message.indexOf("from=");
-        msg = new StringBuffer(message).delete(0, start + 6).toString();
-        finish = msg.indexOf("type=");
-        jid = new StringBuffer(msg).delete(finish - 2, msg.length()).toString();
-        start = message.indexOf("<body>");
-        msg = new StringBuffer(message).delete(0, start + 6).toString();
-        finish = msg.indexOf("</body>");
-        msg = new StringBuffer(msg).delete(finish, msg.length()).toString();
-        boolean ans;
- 
-        ans = UserCommand.doUserCommand(msg, jid, admin);
+    public static void parseMessagePacket(Message message) throws XMPPException, IOException {
+        try {
+            String jid = message.getFrom();
+            String msg = message.getBody();
+            boolean ans;
+            ans = UserCommand.doUserCommand(msg, jid, admin);
 
-        if (ans == false) {
-            sendMessage(jid, "!help - list of commands");
+            if (ans == false) {
+                sendMessage(jid, "!help - list of commands");
+            }
+        } catch (NumberFormatException | ClassNotFoundException | SQLException | ParseException ex) {
+            Logger.getLogger(XmppNet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void incomeChat() throws InterruptedException {
-        PacketFilter filter = new AndFilter(new PacketTypeFilter(Message.class));
-        PacketListener myListener = new PacketListener() {
+        PacketFilter filterMessage = new AndFilter(new PacketTypeFilter(Message.class));
+        PacketCollector myMessageCollector = connection.createPacketCollector(filterMessage);
+
+        PacketListener messageListener = new PacketListener() {
             @Override
-            public void processPacket(Packet packet) {
-                Packet.nextID();
+            public void processPacket(Packet ppacket) {
+                Message packet = (Message) ppacket;
                 try {
-                    pasrePacket(packet.toXML());
-                } catch (XMPPException | IOException | ParseException | NumberFormatException | ClassNotFoundException | SQLException ex) {
+                    try {
+                        parseMessagePacket((Message) ppacket);
+                    } catch (IOException ex) {
+                        Logger.getLogger(XmppNet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } catch (XMPPException ex) {
                     Logger.getLogger(XmppNet.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 packet.removeExtension((PacketExtension) packet);
+
             }
         };
-        connection.addPacketListener(myListener, filter);
+        connection.addPacketListener(messageListener, filterMessage);
     }
 }

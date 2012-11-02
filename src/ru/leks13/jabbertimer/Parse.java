@@ -14,7 +14,6 @@ import org.jivesoftware.smack.XMPPException;
 public class Parse {
 
     public static void ParseConfigFile() throws FileNotFoundException, IOException {
-
         Properties prop = new Properties();
         String fileName = "config.cfg";
         InputStream is = new FileInputStream(fileName);
@@ -62,7 +61,6 @@ public class Parse {
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Parse.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
             }
 
         } catch (XMPPException ex) {

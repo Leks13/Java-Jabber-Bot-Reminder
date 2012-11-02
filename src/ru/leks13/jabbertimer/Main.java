@@ -10,9 +10,7 @@ import java.sql.SQLException;
 import org.jivesoftware.smack.XMPPException;
 
 public class Main implements Runnable {
-
     public static long id;
-
     public static void main(String[] args) throws IOException, FileNotFoundException, XMPPException, InterruptedException {
         id = System.currentTimeMillis();
         System.out.println("Starting...");
@@ -33,8 +31,6 @@ public class Main implements Runnable {
                 System.out.println("Interrupted error \n"+ ex);
             }
         }
-
-
     }
 
     @Override
