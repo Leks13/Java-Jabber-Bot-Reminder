@@ -164,7 +164,7 @@ public class UserCommand {
         if (command.equals("!help")) {
             msg = "Commands: \n"
                     + "!report <message> - send <message> to admin \n \n"
-                    + "!remind <dd.mm.yyy HH:mm>@<remind> - set a reminder on this date \n"
+                    + "!remind <dd.mm.yyyy HH:mm>@<remind> - set a reminder on this date \n"
                     + " For example  !remind 03.10.2012 18:51@Hello \n \n"
                     + "!timer <minutes>@<remind> - set timer. \n"
                     + "  For example '!timer 2@Hello' send after 2 minutes 'Hello' \n \n"
