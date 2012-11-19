@@ -63,7 +63,7 @@ public class UserCommand {
             long dt1 = dt.getTime() / 1000;
             if (!ans) {
                 if (dt1 > (time / 1000)) {
-                    Sql.nodataFromBase("insert into 'TABLE1' ('time', 'jid', 'id','note') values ('" + dt1 + "', '" + jid + "' , '" + Main.id + "','" + noteU + "'); ");
+                    Sql.add(dt1, jid, Main.id, noteU);
                     msg = "Timer is set!";
                 } else {
                     msg = "Wrong date";
@@ -76,8 +76,9 @@ public class UserCommand {
 
         if (command.startsWith("!note") && !ans) {
             command = command.replaceAll("!note ", "");
+            Long time = 0L;
             if (!ans) {
-                Sql.nodataFromBase("insert into 'TABLE1' ('time', 'jid', 'id','note') values ('" + "0" + "', '" + jid + "' , '" + Main.id + "','" + command + "'); ");
+                Sql.add(time, jid, Main.id, command);
             }
             ans = true;
             msg = "Writed!";
@@ -123,7 +124,7 @@ public class UserCommand {
                 }
                 long timeDo = ((time + Long.parseLong(command) * 1000 * 60) / 1000L);
                 if (!ans) {
-                    Sql.nodataFromBase("insert into 'TABLE1' ('time', 'jid', 'id','note') values ('" + timeDo + "', '" + jid + "' , '" + Main.id + "','" + noteU + "'); ");
+                    Sql.add(timeDo, jid, Main.id, noteU);
                 }
                 ans = true;
                 msg = "Timer is set!";
