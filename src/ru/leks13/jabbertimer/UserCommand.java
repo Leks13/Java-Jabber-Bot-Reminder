@@ -31,7 +31,7 @@ public class UserCommand {
         if (command.startsWith("!list") && !ans) {
             java.util.Date today = new java.util.Date();
             long time = (System.currentTimeMillis());
-            msg = Sql.listOfTimer(jid,time);
+            msg = Sql.listOfTimer(jid, time);
             XmppNet.sendMessage(jid, msg);
             ans = true;
         }
@@ -173,6 +173,12 @@ public class UserCommand {
                     + "!my - list of notes \n"
                     + "!note 'text' - write note \n"
                     + "!del #1234567890 - delete note with number #1234567890 \n";
+            if (jid.contains(admin)) {
+                msg += "---------------------\n"
+                        + "!roster - show bot`s roster \n"
+                        + "!status <new_status> - change status \n"
+                        + "!off - offline this bot \n";
+            }
             XmppNet.sendMessage(jid, msg);
             ans = true;
         }
