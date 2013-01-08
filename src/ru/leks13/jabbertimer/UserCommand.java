@@ -31,7 +31,7 @@ public class UserCommand {
         if (command.startsWith("!list") && !ans) {
             java.util.Date today = new java.util.Date();
             long time = (System.currentTimeMillis());
-            msg = Sql.listOfTimer(jid);
+            msg = Sql.listOfTimer(jid,time);
             XmppNet.sendMessage(jid, msg);
             ans = true;
         }

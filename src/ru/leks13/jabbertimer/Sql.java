@@ -61,7 +61,7 @@ public class Sql {
         return rs;
     }
 
-    public static String listOfTimer(String jid) throws ClassNotFoundException, SQLException {
+    public static String listOfTimer(String jid, long currentTime) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         ResultSet rs;
         Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db");
@@ -69,7 +69,7 @@ public class Sql {
         java.util.Date time;
         try (java.sql.Statement st = bd.createStatement()) {
             st.execute("create table if not exists 'TABLE1' ('time' long, 'jid' text, 'id' int, 'note' text);");
-            PreparedStatement ps = bd.prepareStatement("SELECT * FROM TABLE1 WHERE jid =? AND time>0;");
+            PreparedStatement ps = bd.prepareStatement("SELECT * FROM TABLE1 WHERE jid =? AND time>"+currentTime/1000+";");
             ps.setString(1, jid);
             rs = ps.executeQuery();
             while (rs.next()) {
