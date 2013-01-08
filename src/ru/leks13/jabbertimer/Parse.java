@@ -34,6 +34,8 @@ public class Parse {
         String adminB = prop.getProperty("admin");
         String resource = prop.getProperty("resource", "bot");
         String status = prop.getProperty("status", "Alpha version");
+        String bd = prop.getProperty("bd", "timer.db");
+        Sql.setBasePath(bd);
         if (nick == null || server == null || adminB == null) {
             System.out.println("Error! Login or server or admin is null!");
             System.exit(0);

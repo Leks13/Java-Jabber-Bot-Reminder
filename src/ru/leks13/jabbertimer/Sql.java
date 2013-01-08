@@ -14,9 +14,15 @@ import org.jivesoftware.smack.XMPPException;
 
 public class Sql {
 
+    private static String DBPATH;
+
+    public static void setBasePath(String path) {
+        DBPATH = path;
+    }
+
     public static void add(Long time, String jid, Long id, String note) throws ClassNotFoundException, SQLException, XMPPException {
         Class.forName("org.sqlite.JDBC");
-        Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db");
+        Connection bd = DriverManager.getConnection("jdbc:sqlite:" + DBPATH);
         ResultSet rs;
         int i = 1;
         try (java.sql.Statement st = bd.createStatement()) {
@@ -36,7 +42,7 @@ public class Sql {
 
     public static ResultSet timer(Long time) throws ClassNotFoundException, SQLException, XMPPException {
         Class.forName("org.sqlite.JDBC");
-        Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db");
+        Connection bd = DriverManager.getConnection("jdbc:sqlite:" + DBPATH);
         ResultSet rs;
         int i = 1;
         try (java.sql.Statement st = bd.createStatement()) {
@@ -64,12 +70,12 @@ public class Sql {
     public static String listOfTimer(String jid, long currentTime) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         ResultSet rs;
-        Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db");
+        Connection bd = DriverManager.getConnection("jdbc:sqlite:" + DBPATH);
         String f = "";
         java.util.Date time;
         try (java.sql.Statement st = bd.createStatement()) {
             st.execute("create table if not exists 'TABLE1' ('time' long, 'jid' text, 'id' int, 'note' text);");
-            PreparedStatement ps = bd.prepareStatement("SELECT * FROM TABLE1 WHERE jid =? AND time>"+currentTime/1000+";");
+            PreparedStatement ps = bd.prepareStatement("SELECT * FROM TABLE1 WHERE jid =? AND time>" + currentTime / 1000 + ";");
             ps.setString(1, jid);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -91,7 +97,7 @@ public class Sql {
     public static String listOfNote(String jid) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         ResultSet rs;
-        Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db");
+        Connection bd = DriverManager.getConnection("jdbc:sqlite:" + DBPATH);
         String res = "";
         java.util.Date time;
         try (java.sql.Statement st = bd.createStatement()) {
@@ -117,7 +123,7 @@ public class Sql {
     public static void deleteNote(String jid, String id) throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         ResultSet rs;
-        try (Connection bd = DriverManager.getConnection("jdbc:sqlite:timer.db")) {
+        try (Connection bd = DriverManager.getConnection("jdbc:sqlite:" + DBPATH)) {
             try (java.sql.Statement st = bd.createStatement()) {
                 st.execute("create table if not exists 'TABLE1' ('time' long, 'jid' text, 'id' int, 'note' text);");
                 PreparedStatement ps = bd.prepareStatement("DELETE FROM TABLE1 WHERE id=? AND jid=?;");
