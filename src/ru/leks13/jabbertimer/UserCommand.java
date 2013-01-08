@@ -139,20 +139,20 @@ public class UserCommand {
         }
 
 
-        if (command.startsWith("!off") && !ans && jid.contains(admin)) {
+        if (command.startsWith("!off") && !ans && jid.startsWith(admin)) {
             XmppNet.disconnect();
             ans = true;
         }
 
 
-        if (command.startsWith("!roster") && !ans && jid.contains(admin)) {
+        if (command.startsWith("!roster") && !ans && jid.startsWith(admin)) {
             msg = XmppNet.getXmppRoster();
             XmppNet.sendMessage(jid, msg);
             ans = true;
 
         }
 
-        if (command.startsWith("!status") && !ans && jid.contains(admin)) {
+        if (command.startsWith("!status") && !ans && jid.startsWith(admin)) {
             command = new StringBuffer(command).delete(0, 8).toString();
             String status = command;
             Presence presence = new Presence(Presence.Type.available);
@@ -173,7 +173,7 @@ public class UserCommand {
                     + "!my - list of notes \n"
                     + "!note 'text' - write note \n"
                     + "!del #1234567890 - delete note with number #1234567890 \n";
-            if (jid.contains(admin)) {
+            if (jid.startsWith(admin)) {
                 msg += "---------------------\n"
                         + "!roster - show bot`s roster \n"
                         + "!status <new_status> - change status \n"
