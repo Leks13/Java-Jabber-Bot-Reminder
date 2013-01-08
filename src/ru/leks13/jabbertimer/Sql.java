@@ -71,7 +71,7 @@ public class Sql {
         Class.forName("org.sqlite.JDBC");
         ResultSet rs;
         Connection bd = DriverManager.getConnection("jdbc:sqlite:" + DBPATH);
-        String f = "";
+        String res = "";
         java.util.Date time;
         try (java.sql.Statement st = bd.createStatement()) {
             st.execute("create table if not exists 'TABLE1' ('time' long, 'jid' text, 'id' int, 'note' text);");
@@ -81,17 +81,17 @@ public class Sql {
             while (rs.next()) {
                 String timeBase = rs.getString("time");
                 String S = new SimpleDateFormat("dd.MM.yyyy HH:mm Z").format(Long.valueOf(timeBase) * 1000);
-                f += S + "\n";
+                res += S + "\n";
             }
             st.close();
-            if (f.length() == 0) {
-                f = "No timers";
+            if (res.length() == 0) {
+                res = "No timers";
             }
         } finally {
             bd.close();
         }
-
-        return f;
+        res = "List of timers: \n " + res;
+        return res;
     }
 
     public static String listOfNote(String jid) throws ClassNotFoundException, SQLException {
