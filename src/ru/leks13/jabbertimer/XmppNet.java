@@ -112,6 +112,7 @@ public final class XmppNet {
             String jid = message.getFrom();
             String msg = message.getBody();
             boolean ans;
+            msg = msg.trim();
             ans = UserCommand.doUserCommand(msg, jid, admin);
 
             if (ans == false) {

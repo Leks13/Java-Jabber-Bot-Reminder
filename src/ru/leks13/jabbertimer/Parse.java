@@ -31,12 +31,12 @@ public class Parse {
         }
         String server = prop.getProperty("server", domain);
         String password = prop.getProperty("password");
-        String adminB = prop.getProperty("admin");
+        String admin = prop.getProperty("admin");
         String resource = prop.getProperty("resource", "bot");
         String status = prop.getProperty("status", "Alpha version");
         String bd = prop.getProperty("bd", "timer.db");
         Sql.setBasePath(bd);
-        if (nick == null || server == null || adminB == null) {
+        if (nick == null || server == null || admin == null) {
             System.out.println("Error! Login or server or admin is null!");
             System.exit(0);
         }
@@ -50,7 +50,7 @@ public class Parse {
 
         try {
             conXm = new XmppNet(status, nick, domain, server, password, resource, port);
-            conXm.whoIsAdmin(adminB);
+            conXm.whoIsAdmin(admin);
             System.out.println("Config parsed.");
             while (true) {
                 try {

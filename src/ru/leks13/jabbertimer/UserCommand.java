@@ -15,8 +15,6 @@ import org.jivesoftware.smack.packet.Presence;
 
 public class UserCommand {
 
-    public static String muc;
-
     public static Boolean doUserCommand(String command, String jid, String admin) throws XMPPException, IOException, NumberFormatException, ClassNotFoundException, SQLException, ParseException {
         Boolean ans = false;
         String msg = null;
