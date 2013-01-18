@@ -19,3 +19,8 @@ Notes:
 !my - list of notes    
 !note 'text' - write note   
 !del #1234567890 - delete note with number #1234567890   
+   
+Admin`s commands:  
+!roster - show bot`s roster 
+!status <new_status> - change status 
+!off - offline this bot 
